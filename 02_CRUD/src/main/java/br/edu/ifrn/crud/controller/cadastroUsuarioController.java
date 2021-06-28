@@ -48,21 +48,13 @@ public class cadastroUsuarioController {
 		return "redirect:/usuarios/cadastro"; //usar redirect na url usuarios, para "apagar"(atualizar) os contatos salvos do form (tem que colocar /)
 	}
 	
-	@SuppressWarnings("unchecked")
 	@GetMapping("/editar/{id}") //na url vai ta o parametro que deseja editar informado no html, o path-variable pega essa variavel de mesmo nome 
 	public String iniciarEdicao(
 			@PathVariable("id") Integer idUsuario, ModelMap model,
 			HttpSession sessao
 			) {
 		
-		List<Usuario> usuariosCadastrados =  
-				(List<Usuario>) sessao.getAttribute("usuariosCadastrados");
-		
-		Usuario u = new Usuario(); // criar um objeto pra buscar o id entre os usuarios cadastrados
-		u.setId(idUsuario); //setar o id da url no usuario criado 
-		
-		int pos = usuariosCadastrados.indexOf(u); // indexof pega a posição de um objeto na lista
-		u = usuariosCadastrados.get(pos); // u recebe o usuario que tem o mesmo id na mesma posição
+		Usuario u = usuarioRepository.findById(idUsuario).get(); // o get � pra retornar esse usuario	
 		
 		model.addAttribute("usuario", u);  // enviar o usuario para pagina html que no form de cadastro vai ser setado esse u como usuario
 		

@@ -50,13 +50,14 @@
 				<td>
 					<input type="submit" value="buscar"/>  <!-- esse buscar vai retornar a url falado no form  --> 
 					<input type="submit" value="cancelar" formaction="/" formmethod="get"/> <!-- formaction muda o action padrao, pra mao ir pra a mesma url do buscar, formmethod muda o metodo padrao do form  -->
-					
 				</td>
 			</tr>
 		</table>
 	</form>
 	
-	<div th:if="${usuariosEncontrados != null}">
+		<!-- Verificar se a lista NAO esta vazia, ou seja, se há USUARISO CADASTRADOS nela-->
+		
+	<div th:if="${not #lists.isEmpty(usuariosEncontrados)}"> 
 		<table>
 			<tr>
 				<th>Nome</th>
@@ -65,13 +66,16 @@
 				<th th:if="${mostrarTodosDados} == true">Profissão</th>
 				<th>Opções</th>
 			</tr>
+			
 			<!-- u vai percorrer todos os dados dos usuarios encontrados-->
+			
 			<tr th:each="u : ${usuariosEncontrados}"> <!-- pra cada registo encontrado criar uam linha-->
 				<td th:text="${u.nome}"></td>
 				<td th:text="${u.email}"></td>
 				<td th:text="${u.sexo}" th:if="${mostrarTodosDados} == true"></td>
 				<td th:text="${u.profissao}" th:if="${mostrarTodosDados} == true"></td>
 				<td>
+					<!-- Ao apertar em editar o id é colocado na url-->
 					<a th:href="'/usuarios/editar/' + ${u.id}"> <!-- Simbolo de "+" esta comcatenando com a outra parte-->
 						Editar  
 					</a>
