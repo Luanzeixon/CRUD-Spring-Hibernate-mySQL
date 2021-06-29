@@ -16,10 +16,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.edu.ifrn.crud.dominio.Profissao;
 import br.edu.ifrn.crud.dominio.Usuario;
+import br.edu.ifrn.crud.repository.ProfissaoRepository;
 import br.edu.ifrn.crud.repository.UsuarioRepository;
+import br.ifrn.edu.crud.dto.AutoCompleteDTO;
 
 
 @Controller
@@ -29,6 +34,9 @@ public class cadastroUsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	@Autowired
+	private ProfissaoRepository profissaoRepository;
+	
 	@GetMapping("/cadastro")
 	public String entrarCadastro(ModelMap model) {
 		model.addAttribute("usuario", new Usuario()); //envia uma variavel usuario que corresponde a um novo usuario em branco que sera defenida na pagina html.
@@ -36,7 +44,7 @@ public class cadastroUsuarioController {
 	}
 	
 	@PostMapping("/salvar")
-	@Transactional(readOnly = false)
+	@Transactional(readOnly = false) //POIS VAI ACESSAR O BD
 	public String salvar(Usuario usuario,  RedirectAttributes attr, 
 				HttpSession sesao) {
 			
@@ -62,9 +70,23 @@ public class cadastroUsuarioController {
 		return "/usuario/cadastro";
 	}
 	
-	@ModelAttribute("profissoes")
-	public List<String> getProfissoes(){ //Lista de string com todas as profiss√µes retornadas no html
-		return Arrays.asList("Professor","Medico","Advogado","Bombeiro","Policial","Outro");
-	}
+	//METODO QUE RECEBE O TEXTO DO AUTOCOMPLETE
+	@GetMapping("/autocompleteProfissoes")
+	@Transactional(readOnly = true) //POIS VAI ACESSAR O BD, TRUE POIS NAO TERA ALTERA«√O NO BD
+	@ResponseBody 					//PARA ENVIAR AS PROFISSOES EM UM FORMATO QUE O JQUERY UI ENTENTA
+	public List<AutoCompleteDTO> autocompleteProfissoes(
+			@RequestParam("term") String termo){
 		
+		List<Profissao> profissoes = profissaoRepository.findByNome(termo);
+		
+		//TEM QUE MANDAR A LISTA EM DTO PARA O JQUERY ENTENTA
+		List<AutoCompleteDTO> resultados =  new ArrayList<>();
+		
+		//PERCORRER A LISTA
+		profissoes.forEach(p -> resultados.add(
+					new AutoCompleteDTO(p.getNome(),p.getId())
+				));
+		return resultados;
+	}
+	
 }

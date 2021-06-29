@@ -7,8 +7,29 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE-edge"/>
 	<meta name="viewport" content="width-device-width, initial-scale=1, shrink-to-fit=no"/>
+	
+	<!-- jQuery Autocomplete -->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+	<script>
+		$(function(){
+			$("#profissao").autocomplete({
+				source: "/usuarios/autocompleteProfissoes", 
+				minLengh: 1,
+				select: function(event, ui){
+					this.value = ui.item.label; //armazena o texto selecionado pelo usuario
+					$("#idProfissao").val(ui.item.value); //armazena o id da profissao selecionada
+					return false;
+				}
+			});
+		});
+	</script>
+	
 <title>Cadastro de Usuario</title>
 </head>
+
 <body>
 
 	<h1>Cadastro de Usuario</h1>
@@ -55,11 +76,11 @@
 		<tr>
 			<td>Profissão:</td>
 			<td>
-				<select th:field="${usuario.profissao}">
-					<option value=""> Selecione </option>
-					<option th:each="p : ${profissoes}" th:text="${p}"  th:value="${p}"> <!-- th:each = for, cada prossiao vai ser armazenada na variavel p(consegue acessar todas profissoes por p) ou seja vai criar varias option com os nomes -->
-					 </option>
-				</select>
+				<!-- O que tiver no input profissao vai ser armazenado no th:field... -->
+				<input id="profissao" th:field="${usuario.profissao.nome}"/>
+					<!-- Hidden pois não quero mostrar o id -->
+				<input id="idProfissao" type="hidden" th:field="${usuario.profissao.id}" />
+				
 			</td>
 		</tr>
 		<tr>

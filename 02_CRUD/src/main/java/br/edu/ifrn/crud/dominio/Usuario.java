@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity 
 public class Usuario {
@@ -24,8 +25,9 @@ public class Usuario {
 	@Column(nullable = false)
 	private String sexo;
 	
-	@Column(nullable = false)
-	private String profissao;
+	//Muitos usuarios podem ter uma profissao, opicional falso(obrigatorio)
+	@ManyToOne(optional = false) 
+	private Profissao profissao;
 	
 	
 	// pra que o java saiba diferenciar um usuario do outro pelo atributo id
@@ -79,10 +81,10 @@ public class Usuario {
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
-	public String getProfissao() {
+	public Profissao getProfissao() {
 		return profissao;
 	}
-	public void setProfissao(String profissao) {
+	public void setProfissao(Profissao profissao) {
 		this.profissao = profissao;
 	}
 	
