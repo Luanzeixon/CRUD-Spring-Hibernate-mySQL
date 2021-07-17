@@ -64,6 +64,7 @@
 						<img th:if="${u.foto != null}" 
 						th:src="@{/download/} + ${u.foto.id} + '?salvar=false'"
 						style="max-height: 128px">
+						<!-- CODIGO PARA FAZER O DOWNLOAD DESSA FOTO É SO MUDAR DE FALSE PRA TRUE NO TH:SRC-->
 					</td>
 					<td th:text="${u.nome}"></td>
 					<td th:text="${u.email}"></td>

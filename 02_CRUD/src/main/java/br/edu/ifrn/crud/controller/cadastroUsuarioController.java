@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -26,10 +27,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.edu.ifrn.crud.dominio.Arquivo;
 import br.edu.ifrn.crud.dominio.Profissao;
 import br.edu.ifrn.crud.dominio.Usuario;
+import br.edu.ifrn.crud.dto.AutoCompleteDTO;
 import br.edu.ifrn.crud.repository.ArquivoRepository;
 import br.edu.ifrn.crud.repository.ProfissaoRepository;
 import br.edu.ifrn.crud.repository.UsuarioRepository;
-import br.ifrn.edu.crud.dto.AutoCompleteDTO;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -77,6 +78,11 @@ public class cadastroUsuarioController {
 				// se nao tiver anexado(mandando) nenhum arquivo no cadastro
 				usuario.setFoto(null);
 			}
+			
+			//CRIPTOGRAFANDO A SENHA
+			String senhaCriptografada = 
+					new BCryptPasswordEncoder().encode(usuario.getSenha());
+			usuario.setSenha(senhaCriptografada);
 
 			// Ja serve para cadastro e edicao
 			usuarioRepository.save(usuario);
