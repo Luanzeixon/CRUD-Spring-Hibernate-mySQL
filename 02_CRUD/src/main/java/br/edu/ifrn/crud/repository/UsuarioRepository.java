@@ -1,7 +1,6 @@
 package br.edu.ifrn.crud.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,10 +16,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario,Integer> {
 	List<Usuario> findByEmailAndNome(@Param("email") String email,
 									@Param("nome") String nome);
 	
-	
-	//BUSCAR PELO USERNAME = EMAIL
-	@Query("select u from Usuario u where u.email like %:email%") 
-	Optional<Usuario> findByEmail(@Param("email") String email);
-		//OPTIONAL POIS PODE TER OU NÃO
 	
 }
