@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt" layout:decorate="~{Layout}">
+<head>
+<meta charset="UTF-8">
+
+<!-- jQuery Autocomplete -->
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+	$(function() {
+		$("#profissao").autocomplete({
+			source : "/usuarios/autocompleteProfissoes",
+			minLengh : 1,
+			select : function(event, ui) {
+				this.value = ui.item.label; //armazena o texto selecionado pelo usuario
+				$("#idProfissao").val(ui.item.value); //armazena o id da profissao selecionada
+				return false;
+			}
+		});
+	});
+	$(function() {
+		$("#formacao").autocomplete({
+			source : "/usuarios/autocompleteFormacoes",
+			minLengh : 1,
+			select : function(event, ui) {
+				this.value = ui.item.label; //armazena o texto selecionado pelo usuario
+				$("#idFormacao").val(ui.item.value); //armazena o id da profissao selecionada
+				return false;
+			}
+		});
+	});
+</script>
+
+<title>Cadastro de Usuario</title>
+</head>
+
+<body>
+
+	<section layout:fragment="corpo">
+		<h1>Cadastro de Usuario</h1>
+
+		<!-- importar html(layout) -->
+		<div th:replace="fragment/mensagens"></div>
+
+		<form th:action="@{/usuarios/salvar}" th:object="${usuario}"
+			method="post" enctype="multipart/form-data">
+			<!-- enctype = para saber que vai um up de arquivo -->
+			<!-- "@" se refere a chamar uma url, e $ para acessar uma variavel,no caso o th:object diz que eu estou cadastrando um objeto de uma classe atrabes do formulario(tem que especificar no controller) -->
+
+
+			<input type="hidden" th:field="${usuario.id}" />
+			<!-- Pra maneter o id do usuario -->
+
+			<table>
+				<tr>
+					<td>Nome:</td>
+					<td><input type="text" th:field="${usuario.nome}"> <!-- campo nome vai salvar na variavel usuario(colocada a sima) no atributo nome da classe ja criada -->
+					</td>
+				</tr>
+				<tr>
+					<td>Emial:</td>
+					<td><input type="email" th:field="${usuario.email}"></td>
+				</tr>
+				<tr>
+					<td>Senha:</td>
+					<td><input type="password" th:field="${usuario.senha}">
+					</td>
+				</tr>
+				<tr>
+					<td>Sexo:</td>
+					<td><input type="radio" th:field="${usuario.sexo}"
+						th:value="M"> Masculino</td>
+					<td><input type="radio" th:field="${usuario.sexo}"
+						th:value="F"> Feminino</td>
+				</tr>
+				<tr>
+					<td>Profissão:</td>
+					<td>
+						<!-- O que tiver no input profissao vai ser armazenado no th:field... -->
+						<input id="profissao" th:field="${usuario.profissao.nome}" /> <!-- Hidden pois não quero mostrar o id -->
+						<input id="idProfissao" type="hidden"
+						th:field="${usuario.profissao.id}" />
+
+					</td>
+				</tr>
+				<tr>
+					<td>Formação:</td>
+					<td><input id="formacao"
+						th:field="${usuario.cursoFormacao.nome}" /> <input
+						id="idFormacao" type="hidden"
+						th:field="${usuario.cursoFormacao.id}" /> <input type="submit"
+						value="Adiconar" formaction="/usuarios/addCursoFormacao"
+						formmethod="post"></td>
+				</tr>
+				<tr>
+					<td>Foto:</td>
+					<td><input type="file" th:name="file"> <!-- Foto do usuario se mander quando cadastrar(nao se perder) -->
+						<input type="hidden" th:field="${usuario.foto.id}"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<!-- Se o id do usuario for igual a 0 (? é uma pergunta) coloque Cadastrar se nao coloque Editar -->
+						<input type="submit"
+						th:value="${usuario.id} == 0 ? Cadastrar : Editar"> <input
+						type="submit" value="Cancelar" formaction="/" formmethod="get">
+						<input type="submit" value="Remover"
+						th:formation="@{/usuarios/removerCursoFormacao} + ${f.id}"
+						formmethod="post">
+					</td>
+				</tr>
+			</table>
+			<div
+				th:if="${usuario.formacoes} != null 
+			and ${!usuario.formacoes.empty}">
+				<table>
+					<caption>Curso formação</caption>
+					<tr>
+						<th>Nome</th>
+						<th></th>
+					</tr>
+					<tr th:each="f : ${usuario.formacoes}">
+						<td th:text="${f.nome}"></td>
+						<td></td>
+					</tr>
+				</table>
+				<input type="hidden" th:each="f, itemStat : ${usuario.formacoes}"
+					th:field="${usuario.formacoes[__${itemStat.index}__].id}">
+				<input type="hidden" th:each="f, itemStat : ${usuario.formacoes}"
+					th:field="${usuario.formacoes[__${itemStat.index}__].nome}">
+			</div>
+		</form>
+
+	</section>
+
+
+</body>
+</html>
