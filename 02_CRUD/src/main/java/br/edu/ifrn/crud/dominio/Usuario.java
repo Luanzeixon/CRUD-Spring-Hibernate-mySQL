@@ -13,6 +13,9 @@ import javax.persistence.Transient;
 @Entity 
 public class Usuario {
 	
+	public static final String ADMIN = "ADMIN";
+	public static final String USUARIO_COMUM = "COMUM";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //valor id preenchido automaticamente 
 	private int id;
@@ -39,6 +42,8 @@ public class Usuario {
 	@Transient
 	private CursoFormacao cursoFormacao; //auxilio para selecionar curso, curso que esta pesquisando no momento
 	
+	@Column(nullable = false)
+	private String perfil = USUARIO_COMUM;
 	
 	// pra que o java saiba diferenciar um usuario do outro pelo atributo id
 	@Override
@@ -108,6 +113,12 @@ public class Usuario {
 	}
 	public void setCursoFormacao(CursoFormacao cursoFormacao) {
 		this.cursoFormacao = cursoFormacao;
+	}
+	public String getPerfil() {
+		return perfil;
+	}
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
 	}
 	
 	

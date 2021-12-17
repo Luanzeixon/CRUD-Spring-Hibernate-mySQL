@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -43,6 +44,7 @@ public class cadastroUsuarioController {
 	private CursoFormacaoRepository formacaoRepository;
 	
 	@GetMapping("/cadastro")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String entrarCadastro(ModelMap model) {
 		model.addAttribute("usuario", new Usuario()); //envia uma variavel usuario que corresponde a um novo usuario em branco que sera defenida na pagina html.
 		return "usuario/cadastro";

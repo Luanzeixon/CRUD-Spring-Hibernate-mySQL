@@ -8,9 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import br.edu.ifrn.crud.dominio.Usuario;
 import br.edu.ifrn.crud.service.UsuarioService;
 
-//DAR PERMISSÃO
+//DAR PERMISSï¿½O
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
@@ -18,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UsuarioService service;
 	
-	//RESPONSAVEL PELA CONFIG DE AUTENTICAÇÃO E AUTORIZAÇÃO
+	//RESPONSAVEL PELA CONFIG DE AUTENTICAï¿½ï¿½O E AUTORIZAï¿½ï¿½O
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
@@ -33,8 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/css/**,/imagens/**,/js/**").permitAll()
 			.antMatchers("/publico/**").permitAll()
 			
+			.antMatchers( "/usuarios/salvar","/usuarios/editar/**",
+					"/usuaios/remover/**").hasAuthority(Usuario.ADMIN)
+			
 			.anyRequest().authenticated() //O RESTO SO SE FOR AUTENTICADO
-			.and() //ADICIONAR OUTRA CONDIÇÃO(OPÇOES)
+			.and() //ADICIONAR OUTRA CONDIï¿½ï¿½O(OPï¿½OES)
 				.formLogin()
 				.loginPage("/login") //PAGINA QUE VAI CORRESPONDER AO LOGIN QUE FOI CRIADA(TIRAR A PAGINA QUE E FEITA AUTOMATICAMENTE)
 				.defaultSuccessUrl("/",true) //SE O LOGIN DER CERTO CHAMA A URL "/" (A PAGINA INICIAL DO PROJETO)
@@ -42,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.permitAll()
 			.and()
 				.logout()
-				.logoutUrl("/logout") //URL PASSADA NO FORM DA PAGINA INICIO.HTML (LOGOUT É FEITO AUTOMATICAMETE PELO THYMELEAF)
+				.logoutUrl("/logout") //URL PASSADA NO FORM DA PAGINA INICIO.HTML (LOGOUT ï¿½ FEITO AUTOMATICAMETE PELO THYMELEAF)
 				.logoutSuccessUrl("/") //SE O LOGOUT BEM SUCEDIDO VAI PRA PAGINA INICIAL
 			.and()
 				.rememberMe(); //PERMITIR QUE O CHECKBOX NO HTML(URL = LOGIN) FUNCIONE

@@ -12,8 +12,8 @@
 <body>
 
 	<h1>Bem vindo!!!</h1>
-	<a href="/usuarios/cadastro">Cadastrar usuário</a> <br/>
-	<a href="/usuarios/busca">Buscar usuários</a>
+	<a href="/usuarios/cadastro" sec:authorize="hasAuthority('ADMIN')">Cadastrar usuário</a> <br/>
+	<a href="/usuarios/busca" sec:authorize="isAuthenticated()">Buscar usuários</a>
 	
 </body>
 </html>
